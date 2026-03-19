@@ -57,7 +57,7 @@ export function throwDialogContentAlreadyAttachedError() {
   encapsulation: ViewEncapsulation.None,
   // Using OnPush for dialogs caused some G3 sync issues. Disabled until we can track them down.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [CdkPortalOutlet],
   host: {
     'class': 'cdk-dialog-container',
@@ -87,7 +87,7 @@ export class CdkDialogContainer<C extends DialogConfig = DialogConfig>
   protected _document = inject(DOCUMENT);
 
   /** The portal outlet inside of this container into which the dialog content will be loaded. */
-  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet: CdkPortalOutlet;
+  @ViewChild(CdkPortalOutlet, {static: true}) _portalOutlet!: CdkPortalOutlet;
 
   _focusTrapped: Observable<void> = new Subject<void>();
 

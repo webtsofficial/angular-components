@@ -43,15 +43,15 @@ export abstract class BaseRowDef implements OnChanges {
   protected _differs = inject(IterableDiffers);
 
   /** The columns to be displayed on this row. */
-  columns: Iterable<string>;
+  columns!: Iterable<string>;
 
   /** Differ used to check if any changes were made to the columns. */
-  protected _columnsDiffer: IterableDiffer<any>;
+  protected _columnsDiffer!: IterableDiffer<any>;
 
   constructor(...args: unknown[]);
   constructor() {}
 
-  ngOnChanges(changes: SimpleChanges): void {
+  ngOnChanges(changes: SimpleChanges<this>): void {
     // Create a new columns differ if one does not yet exist. Initialize it based on initial value
     // of the columns property or an empty array if none is provided.
     if (!this._columnsDiffer) {
@@ -116,7 +116,7 @@ export class CdkHeaderRowDef extends BaseRowDef implements CanStick, OnChanges {
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
-  override ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges<this>): void {
     super.ngOnChanges(changes);
   }
 
@@ -167,7 +167,7 @@ export class CdkFooterRowDef extends BaseRowDef implements CanStick, OnChanges {
 
   // Prerender fails to recognize that ngOnChanges in a part of this class through inheritance.
   // Explicitly define it so that the method is called as part of the Angular lifecycle.
-  override ngOnChanges(changes: SimpleChanges): void {
+  override ngOnChanges(changes: SimpleChanges<this>): void {
     super.ngOnChanges(changes);
   }
 
@@ -205,7 +205,7 @@ export class CdkRowDef<T> extends BaseRowDef {
    * when no other when functions return true for the data.
    * For every row, there must be at least one when function that passes or an undefined to default.
    */
-  when: (index: number, rowData: T) => boolean;
+  when!: (index: number, rowData: T) => boolean;
 
   constructor(...args: unknown[]);
 
@@ -282,7 +282,7 @@ export class CdkCellOutlet implements OnDestroy {
   _viewContainer = inject(ViewContainerRef);
 
   /** The ordered list of cells to render within this outlet's view container */
-  cells: CdkCellDef[];
+  cells!: CdkCellDef[];
 
   /** The data context to be provided to each cell */
   context: any;
@@ -321,7 +321,7 @@ export class CdkCellOutlet implements OnDestroy {
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })
@@ -337,7 +337,7 @@ export class CdkHeaderRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })
@@ -353,7 +353,7 @@ export class CdkFooterRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   imports: [CdkCellOutlet],
 })
@@ -366,7 +366,9 @@ export class CdkRow {}
 export class CdkNoDataRow {
   templateRef = inject<TemplateRef<any>>(TemplateRef);
 
-  _contentClassName = 'cdk-no-data-row';
+  _contentClassNames = ['cdk-no-data-row', 'cdk-row'];
+  _cellClassNames = ['cdk-cell', 'cdk-no-data-cell'];
+  _cellSelector = 'td, cdk-cell, [cdk-cell], .cdk-cell';
 
   constructor(...args: unknown[]);
   constructor() {}

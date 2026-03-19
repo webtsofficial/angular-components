@@ -80,7 +80,7 @@ export class MatRowDef<T> extends CdkRowDef<T> {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matHeaderRow',
   providers: [{provide: CdkHeaderRow, useExisting: MatHeaderRow}],
@@ -98,7 +98,7 @@ export class MatHeaderRow extends CdkHeaderRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matFooterRow',
   providers: [{provide: CdkFooterRow, useExisting: MatFooterRow}],
@@ -116,7 +116,7 @@ export class MatFooterRow extends CdkFooterRow {}
   },
   // See note on CdkTable for explanation on why this uses the default change detection strategy.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   exportAs: 'matRow',
   providers: [{provide: CdkRow, useExisting: MatRow}],
@@ -130,5 +130,11 @@ export class MatRow extends CdkRow {}
   providers: [{provide: CdkNoDataRow, useExisting: MatNoDataRow}],
 })
 export class MatNoDataRow extends CdkNoDataRow {
-  override _contentClassName = 'mat-mdc-no-data-row';
+  override _cellSelector = 'td, mat-cell, [mat-cell], .mat-cell';
+
+  constructor() {
+    super();
+    this._contentClassNames.push('mat-mdc-no-data-row', 'mat-mdc-row', 'mdc-data-table__row');
+    this._cellClassNames.push('mat-mdc-cell', 'mdc-data-table__cell', 'mat-no-data-cell');
+  }
 }

@@ -40,7 +40,7 @@ export class MatDialogClose implements OnInit, OnChanges {
   private _dialog = inject(MatDialog);
 
   /** Screen-reader label for the button. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Default to "button" to prevents accidental form submits. */
   @Input() type: 'submit' | 'button' | 'reset' = 'button';
@@ -64,8 +64,8 @@ export class MatDialogClose implements OnInit, OnChanges {
     }
   }
 
-  ngOnChanges(changes: SimpleChanges) {
-    const proxiedChange = changes['_matDialogClose'] || changes['_matDialogCloseResult'];
+  ngOnChanges(changes: SimpleChanges<this>) {
+    const proxiedChange = changes['_matDialogClose'];
 
     if (proxiedChange) {
       this.dialogResult = proxiedChange.currentValue;

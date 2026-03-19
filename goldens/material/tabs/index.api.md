@@ -18,7 +18,7 @@ import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusKeyManager } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/bidi';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -31,9 +31,6 @@ import { TemplateRef } from '@angular/core';
 
 // @public
 export const _MAT_INK_BAR_POSITIONER: InjectionToken<_MatInkBarPositioner>;
-
-// @public @deprecated
-export function _MAT_INK_BAR_POSITIONER_FACTORY(): _MatInkBarPositioner;
 
 // @public
 export const MAT_TAB: InjectionToken<any>;
@@ -161,7 +158,7 @@ export class MatTab implements OnInit, OnChanges, OnDestroy {
     // (undocumented)
     static ngAcceptInputType_disabled: unknown;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     // (undocumented)
@@ -246,15 +243,17 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     alignTabs: string | null;
     _allTabs: QueryList<MatTab>;
     readonly animationDone: EventEmitter<void>;
-    get animationDuration(): string;
-    set animationDuration(value: string | number);
-    // (undocumented)
-    protected _animationsDisabled(): boolean;
+    get animationDuration(): MatTabGroupAnimationDuration;
+    set animationDuration(value: MatTabGroupAnimationDuration);
     ariaLabel: string;
     ariaLabelledby: string;
     // @deprecated
     get backgroundColor(): ThemePalette;
     set backgroundColor(value: ThemePalette);
+    // (undocumented)
+    protected _bodyAnimationDuration: string;
+    // (undocumented)
+    protected _bodyAnimationsDisabled(): boolean;
     protected _bodyCentered(isCenter: boolean): void;
     color: ThemePalette;
     get contentTabIndex(): number | null;
@@ -274,6 +273,8 @@ export class MatTabGroup implements AfterViewInit, AfterContentInit, AfterConten
     _getTabIndex(index: number): number;
     _getTabLabelId(tab: MatTab, index: number): string;
     _handleClick(tab: MatTab, tabHeader: MatTabGroupBaseHeader, index: number): void;
+    // (undocumented)
+    protected _headerAnimationDuration: string;
     headerPosition: MatTabHeaderPosition;
     protected _isServer: boolean;
     // (undocumented)
@@ -509,11 +510,6 @@ export class MatTabNavPanel {
     static ɵfac: i0.ɵɵFactoryDeclaration<MatTabNavPanel, never>;
 }
 
-// @public @deprecated
-export const matTabsAnimations: {
-    readonly translateTab: any;
-};
-
 // @public
 export interface MatTabsConfig {
     alignTabs?: 'start' | 'center' | 'end';
@@ -533,7 +529,7 @@ export class MatTabsModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatTabsModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof MatCommonModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatTabsModule, never, [typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink], [typeof i2.BidiModule, typeof MatTabContent, typeof MatTabLabel, typeof MatTab, typeof MatTabGroup, typeof MatTabNav, typeof MatTabNavPanel, typeof MatTabLink]>;
 }
 
 // @public

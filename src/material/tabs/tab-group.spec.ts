@@ -25,23 +25,6 @@ import {MATERIAL_ANIMATIONS} from '../core';
 describe('MatTabGroup', () => {
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [
-        MatTabsModule,
-        SimpleTabsTestApp,
-        SimpleDynamicTabsTestApp,
-        BindedTabsTestApp,
-        AsyncTabsTestApp,
-        DisabledTabsTestApp,
-        TabGroupWithSimpleApi,
-        TemplateTabs,
-        TabGroupWithAriaInputs,
-        TabGroupWithIsActiveBinding,
-        NestedTabs,
-        TabGroupWithIndirectDescendantTabs,
-        TabGroupWithSpaceAbove,
-        NestedTabGroupWithLabel,
-        TabsWithClassesTestApp,
-      ],
       providers: [{provide: MATERIAL_ANIMATIONS, useValue: {animationsDisabled: true}}],
     });
   }));
@@ -474,6 +457,26 @@ describe('MatTabGroup', () => {
       fixture.detectChanges();
       expect(tab.getAttribute('id')).toBe('foo');
       expect(body.getAttribute('aria-labelledby')).toBe('foo');
+    });
+  });
+
+  describe('animation duration', () => {
+    it('should set the body and header animation duration when value is a string', () => {
+      const fixture = TestBed.createComponent(TabsWithCustomAnimationDuration);
+      fixture.detectChanges();
+
+      const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('500ms');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
+    });
+
+    it('should set the body and header animation duration when value is an object', () => {
+      const fixture = TestBed.createComponent(TabsWithObjectAnimationDuration);
+      fixture.detectChanges();
+
+      const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('100ms');
+      expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('200ms');
     });
   });
 
@@ -993,8 +996,8 @@ describe('MatTabGroup', () => {
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
       expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
 
-      delete fixture.componentInstance.labelClassList;
-      delete fixture.componentInstance.bodyClassList;
+      fixture.componentInstance.labelClassList = [];
+      fixture.componentInstance.bodyClassList = [];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1014,8 +1017,8 @@ describe('MatTabGroup', () => {
       expect(labelElements[0].nativeElement.classList).toContain('custom-label-class');
       expect(bodyElements[0].nativeElement.classList).toContain('custom-body-class');
 
-      delete fixture.componentInstance.labelClassList;
-      delete fixture.componentInstance.bodyClassList;
+      fixture.componentInstance.labelClassList = [];
+      fixture.componentInstance.bodyClassList = [];
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -1057,12 +1060,6 @@ describe('MatTabGroup', () => {
 });
 
 describe('nested MatTabGroup with enabled animations', () => {
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, NestedTabs, TabsWithCustomAnimationDuration],
-    });
-  }));
-
   it('should not throw when creating a component with nested tab groups', fakeAsync(() => {
     expect(() => {
       let fixture = TestBed.createComponent(NestedTabs);
@@ -1085,18 +1082,13 @@ describe('nested MatTabGroup with enabled animations', () => {
     tick();
 
     const tabGroup = fixture.nativeElement.querySelector('.mat-mdc-tab-group');
-    expect(tabGroup.style.getPropertyValue('--mat-tab-animation-duration')).toBe('500ms');
+    expect(tabGroup.style.getPropertyValue('--mat-tab-body-animation-duration')).toBe('500ms');
+    expect(tabGroup.style.getPropertyValue('--mat-tab-header-animation-duration')).toBe('500ms');
   }));
 });
 
 describe('MatTabGroup with ink bar fit to content', () => {
   let fixture: ComponentFixture<TabGroupWithInkBarFitToContent>;
-
-  beforeEach(fakeAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabGroupWithInkBarFitToContent],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(TabGroupWithInkBarFitToContent);
@@ -1131,12 +1123,11 @@ describe('MatTabGroup with ink bar fit to content', () => {
   });
 });
 
-describe('MatTabNavBar with a default config', () => {
+describe('MatTabGroup with a default config', () => {
   let fixture: ComponentFixture<SimpleTabsTestApp>;
 
   beforeEach(fakeAsync(() => {
     TestBed.configureTestingModule({
-      imports: [MatTabsModule, SimpleTabsTestApp],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1167,7 +1158,6 @@ describe('MatTabNavBar with a default config', () => {
 describe('MatTabGroup labels aligned with a config', () => {
   it('should work with start align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1183,7 +1173,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with center align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1199,7 +1188,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should work with end align', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
       providers: [
         {
           provide: MAT_TABS_CONFIG,
@@ -1214,9 +1202,7 @@ describe('MatTabGroup labels aligned with a config', () => {
   });
 
   it('should not add align if default config doesnt set align', () => {
-    const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignConfig],
-    }).createComponent(TabsWithAlignConfig);
+    const fixture = TestBed.createComponent(TabsWithAlignConfig);
     fixture.detectChanges();
 
     let tabElement = fixture.nativeElement.querySelector('[mat-align-tabs="start"]');
@@ -1234,7 +1220,6 @@ describe('MatTabGroup labels aligned with a config', () => {
 
   it('should not break if config sets align on already aligned tabs', () => {
     const fixture = TestBed.configureTestingModule({
-      imports: [MatTabsModule, TabsWithAlignCenter],
       providers: [{provide: MAT_TABS_CONFIG, useValue: {alignTabs: 'end'}}],
     }).createComponent(TabsWithAlignCenter);
     fixture.detectChanges();
@@ -1282,16 +1267,16 @@ describe('MatTabGroup labels aligned with a config', () => {
   imports: [MatTabsModule],
 })
 class SimpleTabsTestApp {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   selectedIndex: number = 1;
   focusEvent: any;
   selectEvent: any;
   disableRipple: boolean = false;
   contentTabIndex: number | null = null;
   headerPosition: MatTabHeaderPosition = 'above';
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel!: string;
+  ariaLabelledby!: string;
   secondTabId: string | null = null;
   handleFocus(event: any) {
     this.focusEvent = event;
@@ -1383,7 +1368,7 @@ class BindedTabsTestApp {
   imports: [MatTabsModule],
 })
 class DisabledTabsTestApp {
-  @ViewChildren(MatTab) tabs: QueryList<MatTab>;
+  @ViewChildren(MatTab) tabs!: QueryList<MatTab>;
   isDisabled = false;
 }
 
@@ -1406,7 +1391,7 @@ class AsyncTabsTestApp implements OnInit {
     {label: 'two', content: 'two'},
   ];
 
-  tabs: Observable<any>;
+  tabs!: Observable<any>;
 
   ngOnInit() {
     // Use ngOnInit because there is some issue with scheduling the async task in the constructor.
@@ -1450,7 +1435,7 @@ class TabGroupWithSimpleApi {
   imports: [MatTabsModule],
 })
 class NestedTabs {
-  @ViewChildren(MatTabGroup) groups: QueryList<MatTabGroup>;
+  @ViewChildren(MatTabGroup) groups!: QueryList<MatTabGroup>;
 }
 
 @Component({
@@ -1479,8 +1464,8 @@ class TemplateTabs {}
   imports: [MatTabsModule],
 })
 class TabGroupWithAriaInputs {
-  ariaLabel: string;
-  ariaLabelledby: string;
+  ariaLabel!: string;
+  ariaLabelledby!: string;
 }
 
 @Component({
@@ -1511,6 +1496,17 @@ class TabsWithCustomAnimationDuration {}
 
 @Component({
   template: `
+    <mat-tab-group [animationDuration]="{body: '100ms', header: '200ms'}">
+      <mat-tab label="One">Tab one content</mat-tab>
+      <mat-tab label="Two">Tab two content</mat-tab>
+    </mat-tab-group>
+  `,
+  imports: [MatTabsModule],
+})
+class TabsWithObjectAnimationDuration {}
+
+@Component({
+  template: `
     <mat-tab-group>
       @if (true) {
         <mat-tab label="One">Tab one content</mat-tab>
@@ -1521,7 +1517,7 @@ class TabsWithCustomAnimationDuration {}
   imports: [MatTabsModule],
 })
 class TabGroupWithIndirectDescendantTabs {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 }
 
 @Component({
@@ -1556,7 +1552,7 @@ class TabGroupWithInkBarFitToContent {
   imports: [MatTabsModule],
 })
 class TabGroupWithSpaceAbove {
-  @ViewChild(MatTabGroup) tabGroup: MatTabGroup;
+  @ViewChild(MatTabGroup) tabGroup!: MatTabGroup;
 }
 
 @Component({
@@ -1595,8 +1591,8 @@ class NestedTabGroupWithLabel {}
   imports: [MatTabsModule],
 })
 class TabsWithClassesTestApp {
-  labelClassList?: string | string[];
-  bodyClassList?: string | string[];
+  labelClassList!: string | string[];
+  bodyClassList!: string | string[];
 }
 
 @Component({

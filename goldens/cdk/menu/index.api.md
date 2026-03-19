@@ -5,6 +5,7 @@
 ```ts
 
 import { AfterContentInit } from '@angular/core';
+import { Binding } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { DoCheck } from '@angular/core';
 import { ElementRef } from '@angular/core';
@@ -21,7 +22,6 @@ import { Observable } from 'rxjs';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
 import { OnInit } from '@angular/core';
-import { Optional } from '@angular/core';
 import { QueryList } from '@angular/core';
 import { Renderer2 } from '@angular/core';
 import * as rxjs from 'rxjs';
@@ -47,7 +47,7 @@ export class CdkContextMenuTrigger extends CdkMenuTriggerBase implements OnDestr
     open(coordinates: ContextMenuCoordinates): void;
     _openOnContextMenu(event: MouseEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkContextMenuTrigger, "[cdkContextMenuTriggerFor]", ["cdkContextMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkContextMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkContextMenuPosition"; "required": false; }; "menuData": { "alias": "cdkContextMenuTriggerData"; "required": false; }; "transformOriginSelector": { "alias": "cdkContextMenuTriggerTransformOriginOn"; "required": false; }; "disabled": { "alias": "cdkContextMenuDisabled"; "required": false; }; }, { "opened": "cdkContextMenuOpened"; "closed": "cdkContextMenuClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkContextMenuTrigger, never>;
 }
@@ -84,6 +84,7 @@ export class CdkMenuBar extends CdkMenuBase implements AfterContentInit {
 
 // @public
 export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterContentInit, OnDestroy {
+    protected _allItems: QueryList<CdkMenuItem>;
     protected closeOpenMenu(menu: MenuStackItem, options?: {
         focusParentTrigger?: boolean;
     }): void;
@@ -110,7 +111,7 @@ export abstract class CdkMenuBase extends CdkMenuGroup implements Menu, AfterCon
     setActiveMenuItem(item: number | CdkMenuItem): void;
     protected triggerItem?: CdkMenuItem;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["items"], never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuBase, never, never, { "id": { "alias": "id"; "required": false; }; }, {}, ["_allItems"], never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuBase, never>;
 }
@@ -137,6 +138,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     getLabel(): string;
     getMenu(): Menu | undefined;
     getMenuTrigger(): CdkMenuTrigger | null;
+    protected _handleClick(event: MouseEvent): void;
     get hasMenu(): boolean;
     isMenuOpen(): boolean;
     // (undocumented)
@@ -146,6 +148,7 @@ export class CdkMenuItem implements FocusableOption, FocusableElement, Toggler, 
     // (undocumented)
     protected _ngZone: NgZone;
     _onKeydown(event: KeyboardEvent): void;
+    readonly _parentMenu: Menu | null;
     _resetTabIndex(): void;
     _setTabIndex(event?: MouseEvent): void;
     _tabindex: 0 | -1;
@@ -214,7 +217,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     getMenu(): Menu | undefined;
     _handleClick(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;
@@ -222,7 +225,7 @@ export class CdkMenuTrigger extends CdkMenuTriggerBase implements OnChanges, OnD
     toggle(): void;
     _toggleOnKeydown(event: KeyboardEvent): void;
     // (undocumented)
-    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
+    static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTrigger, "[cdkMenuTriggerFor]", ["cdkMenuTriggerFor"], { "menuTemplateRef": { "alias": "cdkMenuTriggerFor"; "required": false; }; "menuPosition": { "alias": "cdkMenuPosition"; "required": false; }; "menuData": { "alias": "cdkMenuTriggerData"; "required": false; }; "transformOriginSelector": { "alias": "cdkMenuTriggerTransformOriginOn"; "required": false; }; }, { "opened": "cdkMenuOpened"; "closed": "cdkMenuClosed"; }, never, never, true, never>;
     // (undocumented)
     static ɵfac: i0.ɵɵFactoryDeclaration<CdkMenuTrigger, never>;
 }
@@ -233,7 +236,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     abstract close(): void;
     readonly closed: EventEmitter<void>;
     protected readonly destroyed: Subject<void>;
-    protected getMenuContentPortal(): TemplatePortal<any>;
+    protected getMenuContentPortal(): TemplatePortal<any> | undefined;
     readonly injector: Injector;
     protected isElementInsideMenuStack(element: Element): boolean;
     isOpen(): boolean;
@@ -248,6 +251,7 @@ export abstract class CdkMenuTriggerBase implements OnDestroy {
     protected overlayRef: OverlayRef | null;
     registerChildMenu(child: Menu): void;
     protected readonly stopOutsideClicksListener: rxjs.Observable<void>;
+    transformOriginSelector: string | null;
     protected readonly viewContainerRef: ViewContainerRef;
     // (undocumented)
     static ɵdir: i0.ɵɵDirectiveDeclaration<CdkMenuTriggerBase, never, never, {}, {}, never, never, true, never>;
@@ -365,15 +369,13 @@ export { MenuTracker }
 // @public
 export const PARENT_OR_NEW_INLINE_MENU_STACK_PROVIDER: (orientation: "vertical" | "horizontal") => {
     provide: InjectionToken<MenuStack>;
-    deps: Optional[][];
-    useFactory: (parentMenuStack?: MenuStack) => MenuStack;
+    useFactory: () => MenuStack;
 };
 
 // @public
 export const PARENT_OR_NEW_MENU_STACK_PROVIDER: {
     provide: InjectionToken<MenuStack>;
-    deps: Optional[][];
-    useFactory: (parentMenuStack?: MenuStack) => MenuStack;
+    useFactory: () => MenuStack;
 };
 
 // @public

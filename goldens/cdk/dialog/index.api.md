@@ -7,6 +7,7 @@
 import { AfterContentInit } from '@angular/core';
 import { AfterViewInit } from '@angular/core';
 import * as _angular_cdk_portal from '@angular/cdk/portal';
+import { Binding } from '@angular/core';
 import { ChangeDetectorRef } from '@angular/core';
 import { ComponentRef } from '@angular/core';
 import { DoCheck } from '@angular/core';
@@ -143,7 +144,7 @@ export class DialogConfig<D = unknown, R = unknown, C extends DialogContainer = 
     panelClass?: string | string[];
     positionStrategy?: PositionStrategy;
     providers?: StaticProvider[] | ((dialogRef: R, config: DialogConfig<D, R, C>, container: C) => StaticProvider[]);
-    restoreFocus?: boolean | string | HTMLElement;
+    restoreFocus?: RestoreFocusValue;
     role?: DialogRole;
     scrollStrategy?: ScrollStrategy;
     templateContext?: Record<string, any> | (() => Record<string, any>);
@@ -193,6 +194,9 @@ export class DialogRef<R = unknown, C = unknown> {
 
 // @public
 export type DialogRole = 'dialog' | 'alertdialog';
+
+// @public
+export type RestoreFocusValue = boolean | string | HTMLElement;
 
 // @public (undocumented)
 export function throwDialogContentAlreadyAttachedError(): void;

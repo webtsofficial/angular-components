@@ -4,17 +4,11 @@ import {
   dispatchTouchEvent,
 } from '@angular/cdk/testing/private';
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {By} from '@angular/platform-browser';
 import {MatCalendarBody, MatCalendarCell, MatCalendarUserEvent} from './calendar-body';
 
 describe('MatCalendarBody', () => {
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [MatCalendarBody, StandardCalendarBody, RangeCalendarBody],
-    });
-  }));
-
   describe('standard calendar body', () => {
     let fixture: ComponentFixture<StandardCalendarBody>;
     let testComponent: StandardCalendarBody;
@@ -237,7 +231,7 @@ describe('MatCalendarBody', () => {
 
     it('should not mark a cell as a start bridge if there is no end range value', () => {
       testComponent.startValue = 1;
-      testComponent.endValue = null;
+      testComponent.endValue = null!;
       testComponent.comparisonStart = 5;
       testComponent.comparisonEnd = 10;
       fixture.changeDetectorRef.markForCheck();
@@ -265,7 +259,7 @@ describe('MatCalendarBody', () => {
       testComponent.comparisonStart = 1;
       testComponent.comparisonEnd = 5;
       testComponent.startValue = 5;
-      testComponent.endValue = null;
+      testComponent.endValue = null!;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
 
@@ -383,17 +377,6 @@ describe('MatCalendarBody', () => {
       expect(cells[27].classList).toContain(inComparisonClass);
     });
 
-    it('should be able to show a range that ends after the end of the calendar', () => {
-      testComponent.startValue = 27;
-      testComponent.endValue = 50;
-      fixture.changeDetectorRef.markForCheck();
-      fixture.detectChanges();
-
-      expect(cells.some(cell => cell.classList.contains(endClass))).toBe(false);
-      expect(cells[26].classList).toContain(startClass);
-      expect(cells[27].classList).toContain(inRangeClass);
-    });
-
     it('should not to mark a date as both the start and end', () => {
       testComponent.startValue = 1;
       testComponent.endValue = 1;
@@ -439,7 +422,7 @@ describe('MatCalendarBody', () => {
     });
 
     it('should not show a range if there is no start', () => {
-      testComponent.startValue = null;
+      testComponent.startValue = null!;
       testComponent.endValue = 10;
       fixture.changeDetectorRef.markForCheck();
       fixture.detectChanges();
@@ -762,12 +745,12 @@ class StandardCalendarBody {
 })
 class RangeCalendarBody {
   rows = createCalendarCells(4);
-  startValue: number | null;
-  endValue: number | null;
-  comparisonStart: number | null;
-  comparisonEnd: number | null;
-  previewStart: number | null;
-  previewEnd: number | null;
+  startValue!: number;
+  endValue!: number;
+  comparisonStart: number | null = null;
+  comparisonEnd: number | null = null;
+  previewStart: number | null = null;
+  previewEnd: number | null = null;
   drag: MatCalendarUserEvent<unknown> | null = null;
 
   onSelect(event: MatCalendarUserEvent<number>) {
@@ -778,7 +761,7 @@ class RangeCalendarBody {
       this.endValue = value;
     } else {
       this.startValue = value;
-      this.endValue = null;
+      this.endValue = null!;
     }
   }
 

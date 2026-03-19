@@ -1,14 +1,13 @@
-load("@aspect_bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
-load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
-load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 load("@aspect_rules_js//npm:defs.bzl", "npm_link_package")
+load("@aspect_rules_ts//ts:defs.bzl", rules_js_tsconfig = "ts_config")
+load("@bazel_lib//lib:copy_to_bin.bzl", "copy_to_bin")
+load("//tools:defaults.bzl", "jasmine_test", "npm_package", "ts_project")
 
 package(default_visibility = ["//visibility:public"])
 
 npm_link_package(
     name = "node_modules/@angular/cdk/schematics",
     src = "//src/cdk/schematics:npm_package",
-    root_package = package_name(),
 )
 
 copy_to_bin(
@@ -50,7 +49,7 @@ rules_js_tsconfig(
     name = "tsconfig-test",
     src = "tsconfig-test.json",
     deps = [
-        "tsconfig.json",
+        ":tsconfig",
         "//:node_modules/@types/jasmine",
     ],
 )
@@ -126,17 +125,9 @@ ts_project(
         "//:node_modules/@types/jasmine",
         "//:node_modules/@types/node",
         "//:node_modules/fs-extra",
+        "//:node_modules/parse5",
         "//src/cdk/schematics/testing",
     ],
-)
-
-filegroup(
-    name = "schematics_test_cases",
-    testonly = True,
-    srcs = glob([
-        "ng-update/test-cases/**/*_input.ts",
-        "ng-update/test-cases/**/*_expected_output.ts",
-    ]),
 )
 
 jasmine_test(
@@ -146,7 +137,6 @@ jasmine_test(
         ":ng_generate_assets",
         ":schema_assets",
         ":schematics",
-        ":schematics_test_cases",
         ":unit_test_sources",
         "//src/material/schematics:package_json",
     ],

@@ -17,7 +17,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     injector = TestBed.inject(Injector);
   });
 
-  it('should track overlays in order as they are attached and detached', () => {
+  it('should track outside click overlays in order as they are attached and detached', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -143,7 +143,7 @@ describe('OverlayOutsideClickDispatcher', () => {
     );
   });
 
-  it('should not add the same overlay to the stack multiple times', () => {
+  it('should not add the same outside click overlay to the stack multiple times', () => {
     const overlayOne = createOverlayRef(injector);
     const overlayTwo = createOverlayRef(injector);
 
@@ -332,6 +332,34 @@ describe('OverlayOutsideClickDispatcher', () => {
     firstOverlayRef.dispose();
     secondOverlayRef.dispose();
     thirdOverlayRef.dispose();
+  });
+
+  it('should not dispatch to overlays whose eventPredicate does not allow the event', () => {
+    const eventPredicate = () => false;
+    const overlayOne = createOverlayRef(injector, {eventPredicate});
+    overlayOne.attach(new ComponentPortal(TestComponent));
+    const overlayTwo = createOverlayRef(injector, {eventPredicate});
+    overlayTwo.attach(new ComponentPortal(TestComponent));
+
+    const overlayOneSpy = jasmine.createSpy('overlayOne mouse click event spy');
+    const overlayTwoSpy = jasmine.createSpy('overlayTwo mouse click event spy');
+
+    overlayOne.outsidePointerEvents().subscribe(overlayOneSpy);
+    overlayTwo.outsidePointerEvents().subscribe(overlayTwoSpy);
+
+    outsideClickDispatcher.add(overlayOne);
+    outsideClickDispatcher.add(overlayTwo);
+
+    const button = document.createElement('button');
+    document.body.appendChild(button);
+    button.click();
+
+    expect(overlayOneSpy).not.toHaveBeenCalled();
+    expect(overlayTwoSpy).not.toHaveBeenCalled();
+
+    button.remove();
+    overlayOne.dispose();
+    overlayTwo.dispose();
   });
 
   describe('change detection behavior', () => {

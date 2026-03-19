@@ -19,14 +19,17 @@ import {
   MatTreeNestedDataSource,
 } from './index';
 
-describe('MatTree', () => {
+type NodeContent = string[];
+type TreeContent = NodeContent[];
+
+describe('MatTree using TreeControl', () => {
   /** Represents an indent for expectNestedTreeToMatch */
-  const _ = {};
+  const _ = '';
   let treeElement: HTMLElement;
   let underlyingDataSource: FakeDataSource;
 
   describe('flat tree', () => {
-    describe('should initialize', () => {
+    describe('flat tree should initialize', () => {
       let fixture: ComponentFixture<SimpleMatTreeApp>;
       let component: SimpleMatTreeApp;
 
@@ -38,14 +41,14 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with rendered dataNodes', () => {
+      it('should initialize flat tree with rendered dataNodes', () => {
         const nodes = getNodes(treeElement);
 
         expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
         expect(nodes[0].classList).toContain('customNodeClass');
       });
 
-      it('with the right accessibility roles', () => {
+      it('should initialize flat tree with the right accessibility roles', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
 
         getNodes(treeElement).forEach(node => {
@@ -53,7 +56,7 @@ describe('MatTree', () => {
         });
       });
 
-      it('with the right aria-level attrs', () => {
+      it('should initialize flat tree with the right aria-level attrs', () => {
         // add a child to the first node
         const data = underlyingDataSource.data;
         underlyingDataSource.addChild(data[2]);
@@ -64,7 +67,7 @@ describe('MatTree', () => {
         expect(ariaLevels).toEqual(['1', '1', '1', '2']);
       });
 
-      it('with the right aria-expanded attrs', () => {
+      it('should initialize flat tree with the right aria-expanded attrs', () => {
         // add a child to the first node
         const data = underlyingDataSource.data;
         underlyingDataSource.addChild(data[2]);
@@ -79,7 +82,7 @@ describe('MatTree', () => {
         expect(ariaExpandedStates).toEqual([null, null, 'true', null]);
       });
 
-      it('with the right data', () => {
+      it('should initialize flat tree with the right data', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
         const data = underlyingDataSource.data;
@@ -105,7 +108,7 @@ describe('MatTree', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('flat tree with toggle', () => {
       let fixture: ComponentFixture<MatTreeAppWithToggle>;
       let component: MatTreeAppWithToggle;
 
@@ -117,7 +120,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('should expand/collapse the node', () => {
+      it('should expand/collapse the flat tree node', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
         expect(component.treeControl.expansionModel.selected.length)
@@ -181,7 +184,7 @@ describe('MatTree', () => {
         );
       });
 
-      it('should expand/collapse the node recursively', () => {
+      it('should expand/collapse the flat tree node recursively', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
         expect(component.treeControl.expansionModel.selected.length)
@@ -246,7 +249,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with the right data', () => {
+      it('should render flat tree with the right data', () => {
         expectFlatTreeToMatch(
           treeElement,
           28,
@@ -260,7 +263,7 @@ describe('MatTree', () => {
   });
 
   describe('flat tree with undefined or null children', () => {
-    describe('should initialize', () => {
+    describe('flat tree with undefined or null children should initialize', () => {
       let fixture: ComponentFixture<MatTreeWithNullOrUndefinedChild>;
 
       beforeEach(() => {
@@ -269,7 +272,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with rendered dataNodes', () => {
+      it('should initialize flat tree with undefined or null children with rendered dataNodes', () => {
         const nodes = getNodes(treeElement);
 
         expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
@@ -279,7 +282,7 @@ describe('MatTree', () => {
   });
 
   describe('nested tree with undefined or null children', () => {
-    describe('should initialize', () => {
+    describe('nested tree with undefined or null children should initialize', () => {
       let fixture: ComponentFixture<MatNestedTreeWithNullOrUndefinedChild>;
 
       beforeEach(() => {
@@ -288,7 +291,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with rendered dataNodes', () => {
+      it('should initialize nested tree with undefined or null children with rendered dataNodes', () => {
         const nodes = getNodes(treeElement);
 
         expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
@@ -297,7 +300,7 @@ describe('MatTree', () => {
     });
   });
   describe('nested tree', () => {
-    describe('should initialize', () => {
+    describe('nested tree should initialize', () => {
       let fixture: ComponentFixture<NestedMatTreeApp>;
       let component: NestedMatTreeApp;
 
@@ -309,14 +312,14 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with rendered dataNodes', () => {
+      it('should initialize nested tree with rendered dataNodes', () => {
         const nodes = getNodes(treeElement);
 
         expect(nodes).withContext('Expect nodes to be defined').toBeDefined();
         expect(nodes[0].classList).toContain('customNodeClass');
       });
 
-      it('with the right accessibility roles', () => {
+      it('should initialize nested tree with the right accessibility roles', () => {
         expect(treeElement.getAttribute('role')).toBe('tree');
 
         getNodes(treeElement).forEach(node => {
@@ -324,7 +327,7 @@ describe('MatTree', () => {
         });
       });
 
-      it('with the right data', () => {
+      it('should initialize nested tree with the right data', () => {
         expect(underlyingDataSource.data.length).toBe(3);
 
         let data = underlyingDataSource.data;
@@ -412,7 +415,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with the right data', () => {
+      it('should render nested tree with the right data', () => {
         expectNestedTreeToMatch(
           treeElement,
           [`topping_1 - cheese_1 + base_1`],
@@ -423,7 +426,7 @@ describe('MatTree', () => {
       });
     });
 
-    describe('with toggle', () => {
+    describe('nested tree with toggle', () => {
       let fixture: ComponentFixture<NestedMatTreeAppWithToggle>;
       let component: NestedMatTreeAppWithToggle;
 
@@ -435,7 +438,7 @@ describe('MatTree', () => {
         fixture.detectChanges();
       });
 
-      it('with the right aria-expanded attrs', () => {
+      it('should initialize nested tree with the right aria-expanded attrs', () => {
         let ariaExpandedStates = getNodes(treeElement).map(n => n.getAttribute('aria-expanded'));
         expect(ariaExpandedStates).toEqual([null, null, null]);
 
@@ -454,7 +457,7 @@ describe('MatTree', () => {
         expect(ariaExpanded).toEqual([null, 'true', 'false', null]);
       });
 
-      it('should expand/collapse the node', () => {
+      it('should expand/collapse the nested tree node', () => {
         component.toggleRecursively = false;
         const data = underlyingDataSource.data;
         const child = underlyingDataSource.addChild(data[1]);
@@ -499,7 +502,7 @@ describe('MatTree', () => {
           .toBe(0);
       });
 
-      it('should expand/collapse the node recursively', () => {
+      it('should expand/collapse the nested tree node recursively', () => {
         const data = underlyingDataSource.data;
         const child = underlyingDataSource.addChild(data[1]);
         underlyingDataSource.addChild(child);
@@ -658,13 +661,13 @@ describe('MatTree', () => {
 });
 
 export class TestData {
-  pizzaTopping: string;
-  pizzaCheese: string;
-  pizzaBase: string;
-  level: number;
-  children: TestData[];
-  observableChildren: BehaviorSubject<TestData[]>;
-  isSpecial: boolean;
+  pizzaTopping!: string;
+  pizzaCheese!: string;
+  pizzaBase!: string;
+  level!: number;
+  children!: TestData[];
+  observableChildren!: BehaviorSubject<TestData[]>;
+  isSpecial = false;
   isDisabled?: boolean;
 
   constructor(
@@ -754,11 +757,11 @@ function getNodes(treeElement: Element): HTMLElement[] {
 function expectFlatTreeToMatch(
   treeElement: Element,
   expectedPaddingIndent: number = 28,
-  ...expectedTree: any[]
+  ...expectedTree: TreeContent
 ) {
   const missedExpectations: string[] = [];
 
-  function checkNode(node: Element, expectedNode: any[]) {
+  function checkNode(node: Element, expectedNode: NodeContent) {
     const actualTextContent = node.textContent!.trim();
     const expectedTextContent = expectedNode[expectedNode.length - 1];
     if (actualTextContent !== expectedTextContent) {
@@ -768,7 +771,7 @@ function expectFlatTreeToMatch(
     }
   }
 
-  function checkLevel(node: Element, expectedNode: any[]) {
+  function checkLevel(node: Element, expectedNode: NodeContent) {
     const rawLevel = (node as HTMLElement).style.paddingLeft;
 
     // Some browsers return 0, while others return 0px.
@@ -788,7 +791,7 @@ function expectFlatTreeToMatch(
   }
 
   getNodes(treeElement).forEach((node, index) => {
-    const expected = expectedTree ? expectedTree[index] : null;
+    const expected = expectedTree[index];
 
     checkLevel(node, expected);
     checkNode(node, expected);
@@ -799,9 +802,9 @@ function expectFlatTreeToMatch(
   }
 }
 
-function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
+function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: TreeContent) {
   const missedExpectations: string[] = [];
-  function checkNodeContent(node: Element, expectedNode: any[]) {
+  function checkNodeContent(node: Element, expectedNode: NodeContent) {
     const expectedTextContent = expectedNode[expectedNode.length - 1];
     const actualTextContent = node.childNodes.item(0).textContent!.trim();
     if (actualTextContent !== expectedTextContent) {
@@ -811,7 +814,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
     }
   }
 
-  function checkNodeDescendants(node: Element, expectedNode: any[], currentIndex: number) {
+  function checkNodeDescendants(node: Element, expectedNode: NodeContent, currentIndex: number) {
     let expectedDescendant = 0;
 
     for (let i = currentIndex + 1; i < expectedTree.length; ++i) {
@@ -831,7 +834,7 @@ function expectNestedTreeToMatch(treeElement: Element, ...expectedTree: any[]) {
   }
 
   getNodes(treeElement).forEach((node, index) => {
-    const expected = expectedTree ? expectedTree[index] : null;
+    const expected = expectedTree[index];
 
     checkNodeDescendants(node, expected, index);
     checkNodeContent(node, expected);
@@ -876,7 +879,7 @@ class SimpleMatTreeApp {
 
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -970,8 +973,8 @@ class MatTreeWithNullOrUndefinedChild {
   imports: [MatTreeModule],
 })
 class MatNestedTreeWithNullOrUndefinedChild {
-  treeControl: NestedTreeControl<FoodNode>;
-  dataSource: MatTreeNestedDataSource<FoodNode>;
+  treeControl!: NestedTreeControl<FoodNode>;
+  dataSource!: MatTreeNestedDataSource<FoodNode>;
 
   constructor() {
     this.treeControl = new NestedTreeControl<FoodNode>(this._getChildren);
@@ -1002,10 +1005,10 @@ class NestedMatTreeApp {
 
   treeControl = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1039,10 +1042,10 @@ class WhenNodeNestedMatTreeApp {
 
   treeControl: TreeControl<TestData> = new NestedTreeControl(this.getChildren);
 
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1088,7 +1091,7 @@ class MatTreeAppWithToggle {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1122,10 +1125,10 @@ class NestedMatTreeAppWithToggle {
     node.observableChildren.pipe(map(children => children.length > 0));
 
   treeControl = new NestedTreeControl(this.getChildren);
-  dataSource = new MatTreeNestedDataSource();
+  dataSource = new MatTreeNestedDataSource<TestData>();
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {
@@ -1174,7 +1177,7 @@ class WhenNodeMatTreeApp {
   dataSource = new MatTreeFlatDataSource(this.treeControl, this.treeFlattener);
   underlyingDataSource = new FakeDataSource();
 
-  @ViewChild(MatTree) tree: MatTree<TestData>;
+  @ViewChild(MatTree) tree!: MatTree<TestData>;
 
   constructor() {
     this.underlyingDataSource.connect().subscribe(data => {

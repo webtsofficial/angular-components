@@ -8,7 +8,7 @@
 
 import {Rule} from '@angular-devkit/schematics';
 
-/** Entry point for the migration schematics with target of Angular Material v20 */
-export function updateToV20(): Rule {
+/** Entry point for the migration schematics with target of Google Maps v22 */
+export function updateToV22(): Rule {
   return () => {};
 }

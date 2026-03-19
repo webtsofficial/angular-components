@@ -36,10 +36,10 @@ interface CachedItemPosition<T> {
  */
 export class SingleAxisSortStrategy implements DropListSortStrategy {
   /** Root element container of the drop list. */
-  private _element: HTMLElement;
+  private _element!: HTMLElement;
 
   /** Function used to determine if an item can be sorted into a specific index. */
-  private _sortPredicate: SortPredicate<DragRef>;
+  private _sortPredicate!: SortPredicate<DragRef>;
 
   /** Cache of the dimensions of all the items inside the container. */
   private _itemPositions: CachedItemPosition<DragRef>[] = [];
@@ -49,13 +49,13 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
    * that were there at the start of the sequence, as well as any items that have been dragged
    * in, but haven't been dropped yet.
    */
-  private _activeDraggables: DragRef[];
+  private _activeDraggables!: DragRef[];
 
   /** Direction in which the list is oriented. */
   orientation: 'vertical' | 'horizontal' = 'vertical';
 
   /** Layout direction of the drop list. */
-  direction: Direction;
+  direction: Direction = 'ltr';
 
   constructor(private _dragDropRegistry: DragDropRegistry) {}
 
@@ -168,6 +168,17 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
    *   out automatically.
    */
   enter(item: DragRef, pointerX: number, pointerY: number, index?: number): void {
+    const activeDraggables = this._activeDraggables;
+    const currentIndex = activeDraggables.indexOf(item);
+    const placeholder = item.getPlaceholderElement();
+
+    // Since the item may be in the `activeDraggables` already (e.g. if the user dragged it
+    // into another container and back again), we have to ensure that it isn't duplicated.
+    // Note that we need to run this early so the code further below isn't thrown off.
+    if (currentIndex > -1) {
+      activeDraggables.splice(currentIndex, 1);
+    }
+
     const newIndex =
       index == null || index < 0
         ? // We use the coordinates of where the item entered the drop
@@ -175,9 +186,6 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
           this._getItemIndexFromPointerPosition(item, pointerX, pointerY)
         : index;
 
-    const activeDraggables = this._activeDraggables;
-    const currentIndex = activeDraggables.indexOf(item);
-    const placeholder = item.getPlaceholderElement();
     let newPositionReference: DragRef | undefined = activeDraggables[newIndex];
 
     // If the item at the new position is the same as the item that is being dragged,
@@ -195,12 +203,6 @@ export class SingleAxisSortStrategy implements DropListSortStrategy {
       this._shouldEnterAsFirstChild(pointerX, pointerY)
     ) {
       newPositionReference = activeDraggables[0];
-    }
-
-    // Since the item may be in the `activeDraggables` already (e.g. if the user dragged it
-    // into another container and back again), we have to ensure that it isn't duplicated.
-    if (currentIndex > -1) {
-      activeDraggables.splice(currentIndex, 1);
     }
 
     // Don't use items that are being dragged as a reference, because

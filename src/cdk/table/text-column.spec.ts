@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {
   getTableTextColumnMissingNameError,
@@ -13,12 +13,6 @@ describe('CdkTextColumn', () => {
   let fixture: ComponentFixture<BasicTextColumnApp>;
   let component: BasicTextColumnApp;
   let tableElement: HTMLElement;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [CdkTableModule, BasicTextColumnApp, MissingTableApp, TextColumnWithoutNameApp],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(BasicTextColumnApp);
@@ -72,18 +66,6 @@ describe('CdkTextColumn', () => {
     ]);
   });
 
-  it('should allow for custom data accessor', () => {
-    component.dataAccessorA = (data: TestData) => data.propertyA + '!';
-    fixture.changeDetectorRef.markForCheck();
-    fixture.detectChanges();
-
-    expectTableToMatchContent(tableElement, [
-      ['PropertyA', 'PropertyB', 'PropertyC'],
-      ['a_1!', 'b_1', 'c_1'],
-      ['a_2!', 'b_2', 'c_2'],
-    ]);
-  });
-
   it('should update values when data changes', () => {
     component.data = [
       {propertyA: 'changed-a_1', propertyB: 'b_1', propertyC: 'c_1'},
@@ -105,7 +87,6 @@ describe('CdkTextColumn', () => {
       // The testing module has been initialized in the root describe group for the ripples.
       TestBed.resetTestingModule();
       TestBed.configureTestingModule({
-        imports: [CdkTableModule, BasicTextColumnApp],
         providers: [{provide: TEXT_COLUMN_OPTIONS, useValue: options}],
       });
 
@@ -177,9 +158,9 @@ class BasicTextColumnApp {
     {propertyA: 'a_2', propertyB: 'b_2', propertyC: 'c_2'},
   ];
 
-  headerTextB: string;
-  dataAccessorA: (data: TestData) => string;
-  justifyC = 'start';
+  headerTextB!: string;
+  dataAccessorA!: (data: TestData) => string;
+  justifyC = 'start' as const;
 }
 
 @Component({

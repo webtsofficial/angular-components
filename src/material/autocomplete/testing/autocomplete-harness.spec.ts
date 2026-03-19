@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {MatAutocompleteModule} from '../module';
+import {MatAutocompleteModule} from '../autocomplete-module';
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 import {HarnessLoader} from '@angular/cdk/testing';
 import {TestbedHarnessEnvironment} from '@angular/cdk/testing/testbed';
@@ -101,7 +101,7 @@ describe('MatAutocompleteHarness', () => {
     expect(options.length).toBe(14);
   });
 
-  it('should be able to get the autocomplete panel groups', async () => {
+  it('should be able to get the autocomplete panel options when multiple autocompletes are open', async () => {
     const input = await loader.getHarness(MatAutocompleteHarness.with({selector: '#plain'}));
     await input.focus();
 

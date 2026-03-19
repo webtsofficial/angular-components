@@ -13,9 +13,9 @@ import { EventEmitter } from '@angular/core';
 import { FocusableOption } from '@angular/cdk/a11y';
 import { FocusOrigin } from '@angular/cdk/a11y';
 import * as i0 from '@angular/core';
-import * as i1 from '@angular/cdk/bidi';
-import * as i2 from '@angular/cdk/accordion';
-import * as i3 from '@angular/cdk/portal';
+import * as i1 from '@angular/cdk/accordion';
+import * as i2$1 from '@angular/cdk/bidi';
+import * as i2 from '@angular/cdk/portal';
 import { InjectionToken } from '@angular/core';
 import { OnChanges } from '@angular/core';
 import { OnDestroy } from '@angular/core';
@@ -24,9 +24,6 @@ import { SimpleChanges } from '@angular/core';
 import { Subject } from 'rxjs';
 import { TemplatePortal } from '@angular/cdk/portal';
 import { TemplateRef } from '@angular/core';
-
-// @public @deprecated
-export const EXPANSION_PANEL_ANIMATION_TIMING = "225ms cubic-bezier(0.4,0.0,0.2,1)";
 
 // @public
 export const MAT_ACCORDION: InjectionToken<MatAccordionBase>;
@@ -73,12 +70,6 @@ export type MatAccordionDisplayMode = 'default' | 'flat';
 // @public
 export type MatAccordionTogglePosition = 'before' | 'after';
 
-// @public @deprecated
-export const matExpansionAnimations: {
-    readonly indicatorRotate: any;
-    readonly bodyExpansion: any;
-};
-
 // @public (undocumented)
 export class MatExpansionModule {
     // (undocumented)
@@ -86,7 +77,7 @@ export class MatExpansionModule {
     // (undocumented)
     static ɵinj: i0.ɵɵInjectorDeclaration<MatExpansionModule>;
     // (undocumented)
-    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof MatCommonModule, typeof i2.CdkAccordionModule, typeof i3.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
+    static ɵmod: i0.ɵɵNgModuleDeclaration<MatExpansionModule, never, [typeof i1.CdkAccordionModule, typeof i2.PortalModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent], [typeof i2$1.BidiModule, typeof MatAccordion, typeof MatExpansionPanel, typeof MatExpansionPanelActionRow, typeof MatExpansionPanelHeader, typeof MatExpansionPanelTitle, typeof MatExpansionPanelDescription, typeof MatExpansionPanelContent]>;
 }
 
 // @public
@@ -104,14 +95,42 @@ export class MatExpansionPanel extends CdkAccordionItem implements AfterContentI
     _headerId: string;
     get hideToggle(): boolean;
     set hideToggle(value: boolean);
-    readonly _inputChanges: Subject<SimpleChanges>;
+    readonly _inputChanges: Subject<{
+        hideToggle?: i0.SimpleChange<boolean> | undefined;
+        togglePosition?: i0.SimpleChange<MatAccordionTogglePosition> | undefined;
+        readonly afterExpand?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly afterCollapse?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly _inputChanges?: i0.SimpleChange<Subject</*elided*/ any>> | undefined;
+        accordion?: i0.SimpleChange<MatAccordionBase> | undefined;
+        _lazyContent?: i0.SimpleChange<MatExpansionPanelContent> | undefined;
+        _body?: i0.SimpleChange<ElementRef<HTMLElement>> | undefined;
+        _portal?: i0.SimpleChange<TemplatePortal<any>> | undefined;
+        _headerId?: i0.SimpleChange<string> | undefined;
+        _hasSpacing?: i0.SimpleChange<() => boolean> | undefined;
+        _getExpandedState?: i0.SimpleChange<() => MatExpansionPanelState> | undefined;
+        toggle?: i0.SimpleChange<() => void> | undefined;
+        close?: i0.SimpleChange<() => void> | undefined;
+        open?: i0.SimpleChange<() => void> | undefined;
+        ngAfterContentInit?: i0.SimpleChange<() => void> | undefined;
+        ngOnChanges?: i0.SimpleChange<(changes: /*elided*/ any) => void> | undefined;
+        ngOnDestroy?: i0.SimpleChange<() => void> | undefined;
+        _containsFocus?: i0.SimpleChange<() => boolean> | undefined;
+        readonly closed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly opened?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly destroyed?: i0.SimpleChange<EventEmitter<void>> | undefined;
+        readonly expandedChange?: i0.SimpleChange<EventEmitter<boolean>> | undefined;
+        readonly id?: i0.SimpleChange<string> | undefined;
+        expanded?: i0.SimpleChange<boolean> | undefined;
+        disabled?: i0.SimpleChange<boolean> | undefined;
+        ngOnInit?: i0.SimpleChange<() => void> | undefined;
+    }>;
     _lazyContent: MatExpansionPanelContent;
     // (undocumented)
     static ngAcceptInputType_hideToggle: unknown;
     // (undocumented)
     ngAfterContentInit(): void;
     // (undocumented)
-    ngOnChanges(changes: SimpleChanges): void;
+    ngOnChanges(changes: SimpleChanges<this>): void;
     // (undocumented)
     ngOnDestroy(): void;
     open(): void;

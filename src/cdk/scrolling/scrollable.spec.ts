@@ -1,7 +1,7 @@
 import {Direction} from '../bidi';
 import {CdkScrollable, ScrollingModule} from '../scrolling';
 import {Component, ElementRef, Input, ViewChild} from '@angular/core';
-import {ComponentFixture, TestBed, waitForAsync} from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 function expectOverlapping(el1: ElementRef<Element>, el2: ElementRef<Element>, expected = true) {
   const r1 = el1.nativeElement.getBoundingClientRect();
@@ -23,12 +23,6 @@ describe('CdkScrollable', () => {
   let fixture: ComponentFixture<ScrollableViewport>;
   let testComponent: ScrollableViewport;
   let maxOffset = 0;
-
-  beforeEach(waitForAsync(() => {
-    TestBed.configureTestingModule({
-      imports: [ScrollingModule, ScrollableViewport],
-    });
-  }));
 
   beforeEach(() => {
     fixture = TestBed.createComponent(ScrollableViewport);
@@ -61,7 +55,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo top-left', () => {
+    it('should scrollTo top-left in LTR', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, true);
@@ -77,7 +71,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo bottom-right', () => {
+    it('should scrollTo bottom-right in LTR', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -93,7 +87,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to top-end', () => {
+    it('should scroll to top-end in LTR', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -109,7 +103,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to bottom-start', () => {
+    it('should scroll to bottom-start in LTR', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -150,7 +144,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scrollTo top-left', () => {
+    it('should scrollTo top-left in RTL', () => {
       testComponent.scrollable.scrollTo({top: 0, left: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -166,7 +160,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scrollTo bottom-right', () => {
+    it('should scrollTo bottom-right in RTL', () => {
       testComponent.scrollable.scrollTo({bottom: 0, right: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -182,7 +176,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(maxOffset);
     });
 
-    it('should scroll to top-end', () => {
+    it('should scroll to top-end in RTL', () => {
       testComponent.scrollable.scrollTo({top: 0, end: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -198,7 +192,7 @@ describe('CdkScrollable', () => {
       expect(testComponent.scrollable.measureScrollOffset('end')).toBe(0);
     });
 
-    it('should scroll to bottom-start', () => {
+    it('should scroll to bottom-start in RTL', () => {
       testComponent.scrollable.scrollTo({bottom: 0, start: 0});
 
       expectOverlapping(testComponent.scrollContainer, testComponent.firstRowStart, false);
@@ -249,11 +243,11 @@ describe('CdkScrollable', () => {
   imports: [ScrollingModule],
 })
 class ScrollableViewport {
-  @Input() dir: Direction;
-  @ViewChild(CdkScrollable) scrollable: CdkScrollable;
-  @ViewChild('scrollContainer') scrollContainer: ElementRef<Element>;
-  @ViewChild('firstRowStart') firstRowStart: ElementRef<Element>;
-  @ViewChild('firstRowEnd') firstRowEnd: ElementRef<Element>;
-  @ViewChild('lastRowStart') lastRowStart: ElementRef<Element>;
-  @ViewChild('lastRowEnd') lastRowEnd: ElementRef<Element>;
+  @Input() dir: Direction = 'ltr';
+  @ViewChild(CdkScrollable) scrollable!: CdkScrollable;
+  @ViewChild('scrollContainer') scrollContainer!: ElementRef<Element>;
+  @ViewChild('firstRowStart') firstRowStart!: ElementRef<Element>;
+  @ViewChild('firstRowEnd') firstRowEnd!: ElementRef<Element>;
+  @ViewChild('lastRowStart') lastRowStart!: ElementRef<Element>;
+  @ViewChild('lastRowEnd') lastRowEnd!: ElementRef<Element>;
 }

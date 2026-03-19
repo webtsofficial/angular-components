@@ -34,7 +34,6 @@ ng_project(
         exclude = ["index.html"],
     ),
     deps = [
-        "//:node_modules/@angular/animations",
         "//:node_modules/@angular/core",
         "//:node_modules/@angular/forms",
         "//:node_modules/@angular/platform-browser",
@@ -85,7 +84,7 @@ http_server(
     testonly = True,
     srcs = devserverIndexHtmlDependencies,
     additional_root_paths = [
-        "angular_material/",
+        "_main/",
     ],
     tags = ["manual"],
     deps = [

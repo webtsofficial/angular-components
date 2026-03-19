@@ -16,10 +16,6 @@ describe('MatTreeHarness', () => {
   let loader: HarnessLoader;
 
   beforeEach(() => {
-    TestBed.configureTestingModule({
-      imports: [MatTreeModule, TreeHarnessTest],
-    });
-
     fixture = TestBed.createComponent(TreeHarnessTest);
     fixture.detectChanges();
     loader = TestbedHarnessEnvironment.loader(fixture);
@@ -93,7 +89,7 @@ describe('MatTreeHarness', () => {
     expect(await firstGroup.isExpanded()).toBe(false);
   });
 
-  it('should correctly get tree structure', async () => {
+  it('should correctly get tree structure (flat tree)', async () => {
     const trees = await loader.getAllHarnesses(MatTreeHarness);
     const flatTree = trees[0];
 
@@ -131,7 +127,7 @@ describe('MatTreeHarness', () => {
     });
   });
 
-  it('should correctly get tree structure', async () => {
+  it('should correctly get tree structure (nested tree)', async () => {
     const trees = await loader.getAllHarnesses(MatTreeHarness);
     const nestedTree = trees[1];
     expect(await nestedTree.getTreeStructure()).toEqual({

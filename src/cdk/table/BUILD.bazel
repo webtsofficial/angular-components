@@ -4,7 +4,6 @@ load(
     "ng_project",
     "ng_web_test_suite",
     "sass_binary",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -17,7 +16,6 @@ ng_project(
     ),
     assets = [":table.css"],
     deps = [
-        "//:node_modules/@angular/common",
         "//:node_modules/@angular/core",
         "//:node_modules/rxjs",
         "//src:dev_mode_types",
@@ -34,7 +32,7 @@ sass_binary(
     src = "table.scss",
 )
 
-ts_project(
+ng_project(
     name = "unit_test_sources",
     testonly = True,
     srcs = glob(
@@ -48,6 +46,8 @@ ts_project(
         "//:node_modules/rxjs",
         "//src/cdk/bidi",
         "//src/cdk/collections",
+        "//src/cdk/scrolling",
+        "//src/cdk/testing/private",
     ],
 )
 

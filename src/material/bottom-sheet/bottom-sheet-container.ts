@@ -35,7 +35,7 @@ const EXIT_ANIMATION = '_mat-bottom-sheet-exit';
   // they were stamped out. This means that we can't have the bottom sheet container be OnPush,
   // because it might cause the sheets that were opened from a template not to be out of date.
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   encapsulation: ViewEncapsulation.None,
   host: {
     'class': 'mat-bottom-sheet-container',
@@ -66,7 +66,7 @@ export class MatBottomSheetContainer extends CdkDialogContainer implements OnDes
   }>();
 
   /** Whether the component has been destroyed. */
-  private _destroyed: boolean;
+  private _destroyed = false;
 
   constructor(...args: unknown[]);
 

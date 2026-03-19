@@ -45,7 +45,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   set directions(directions: google.maps.DirectionsResult) {
     this._directions = directions;
   }
-  private _directions: google.maps.DirectionsResult;
+  private _directions!: google.maps.DirectionsResult;
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/directions
@@ -55,7 +55,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
   set options(options: google.maps.DirectionsRendererOptions) {
     this._options = options;
   }
-  private _options: google.maps.DirectionsRendererOptions;
+  private _options!: google.maps.DirectionsRendererOptions;
 
   /**
    * See developers.google.com/maps/documentation/javascript/reference/directions
@@ -107,7 +107,7 @@ export class MapDirectionsRenderer implements OnInit, OnChanges, OnDestroy {
     });
   }
 
-  ngOnChanges(changes: SimpleChanges) {
+  ngOnChanges(changes: SimpleChanges<this>) {
     if (this.directionsRenderer) {
       if (changes['options']) {
         this.directionsRenderer.setOptions(this._combineOptions());

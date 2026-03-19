@@ -13,6 +13,7 @@ import {
   ComponentRef,
   EmbeddedViewRef,
   Injector,
+  Binding,
 } from '@angular/core';
 import {
   throwNullPortalOutletError,
@@ -33,7 +34,7 @@ export interface ComponentType<T> {
  * It can be attach to / detached from a `PortalOutlet`.
  */
 export abstract class Portal<T> {
-  private _attachedHost: PortalOutlet | null;
+  private _attachedHost: PortalOutlet | null = null;
 
   /** Attach this portal to a host. */
   attach(host: PortalOutlet): T {
@@ -99,17 +100,24 @@ export class ComponentPortal<T> extends Portal<ComponentRef<T>> {
    */
   projectableNodes?: Node[][] | null;
 
+  /**
+   * Bindings to apply to the created component.
+   */
+  readonly bindings: Binding[] | null;
+
   constructor(
     component: ComponentType<T>,
     viewContainerRef?: ViewContainerRef | null,
     injector?: Injector | null,
     projectableNodes?: Node[][] | null,
+    bindings?: Binding[],
   ) {
     super();
     this.component = component;
     this.viewContainerRef = viewContainerRef;
     this.injector = injector;
     this.projectableNodes = projectableNodes;
+    this.bindings = bindings || null;
   }
 }
 
@@ -186,10 +194,10 @@ export interface PortalOutlet {
  */
 export abstract class BasePortalOutlet implements PortalOutlet {
   /** The portal currently attached to the host. */
-  protected _attachedPortal: Portal<any> | null;
+  protected _attachedPortal: Portal<any> | null = null;
 
   /** A function that will permanently dispose this host. */
-  private _disposeFn: (() => void) | null;
+  private _disposeFn: (() => void) | null = null;
 
   /** Whether this host has already been permanently disposed. */
   private _isDisposed: boolean = false;

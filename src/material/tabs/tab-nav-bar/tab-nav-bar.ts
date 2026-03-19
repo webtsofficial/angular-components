@@ -64,11 +64,11 @@ import {_CdkPrivateStyleLoader} from '@angular/cdk/private';
     '[class.mat-accent]': 'color === "accent"',
     '[class.mat-warn]': 'color === "warn"',
     '[class._mat-animation-noopable]': '_animationsDisabled',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
+    '[style.--mat-tab-header-animation-duration]': 'animationDuration',
   },
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   imports: [MatRipple, CdkObserveContent],
 })
 export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit, AfterViewInit {
@@ -99,10 +99,11 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
     this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
   }
 
-  private _animationDuration: string;
+  private _animationDuration!: string;
 
   /** Query list of all tab links of the tab navigation. */
-  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true}) _items: QueryList<MatTabLink>;
+  @ContentChildren(forwardRef(() => MatTabLink), {descendants: true})
+  _items!: QueryList<MatTabLink>;
 
   /**
    * Theme color of the background of the tab nav. This API is supported in M2 themes only, it
@@ -155,12 +156,12 @@ export class MatTabNav extends MatPaginatedTabHeader implements AfterContentInit
    */
   @Input() tabPanel?: MatTabNavPanel;
 
-  @ViewChild('tabListContainer', {static: true}) _tabListContainer: ElementRef;
-  @ViewChild('tabList', {static: true}) _tabList: ElementRef;
-  @ViewChild('tabListInner', {static: true}) _tabListInner: ElementRef;
-  @ViewChild('nextPaginator') _nextPaginator: ElementRef<HTMLElement>;
-  @ViewChild('previousPaginator') _previousPaginator: ElementRef<HTMLElement>;
-  _inkBar: MatInkBar;
+  @ViewChild('tabListContainer', {static: true}) _tabListContainer!: ElementRef;
+  @ViewChild('tabList', {static: true}) _tabList!: ElementRef;
+  @ViewChild('tabListInner', {static: true}) _tabListInner!: ElementRef;
+  @ViewChild('nextPaginator') _nextPaginator!: ElementRef<HTMLElement>;
+  @ViewChild('previousPaginator') _previousPaginator!: ElementRef<HTMLElement>;
+  _inkBar!: MatInkBar;
 
   constructor(...args: unknown[]);
 

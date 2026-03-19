@@ -6,7 +6,6 @@ load(
     "ng_web_test_suite",
     "sass_binary",
     "sass_library",
-    "ts_project",
 )
 
 package(default_visibility = ["//visibility:public"])
@@ -136,6 +135,7 @@ sass_binary(
         "//src/material/core/style:private",
         "//src/material/core/style:vendor_prefixes",
         "//src/material/core/tokens:token_utils",
+        "//src/material/progress-spinner:theme",
     ],
 )
 
@@ -144,10 +144,10 @@ ng_project(
     srcs = [
         "button.ts",
         "button-base.ts",
+        "button-module.ts",
         "fab.ts",
         "icon-button.ts",
         "index.ts",
-        "module.ts",
         "public-api.ts",
     ],
     assets = [
@@ -164,7 +164,7 @@ ng_project(
     ],
 )
 
-ts_project(
+ng_project(
     name = "button_tests_lib",
     testonly = True,
     srcs = glob(

@@ -24,7 +24,7 @@ import {
 } from '@angular/core/testing';
 import {FormControl, FormGroup, FormsModule, ReactiveFormsModule} from '@angular/forms';
 import {By} from '@angular/platform-browser';
-import {MatSliderModule} from './module';
+import {MatSliderModule} from './slider-module';
 import {MatSlider} from './slider';
 import {MatSliderRangeThumb, MatSliderThumb} from './slider-input';
 import {_MatThumb} from './slider-interface';
@@ -1402,7 +1402,7 @@ describe('MatSlider', () => {
     }));
   });
 
-  describe('slider as a custom form control', () => {
+  describe('range slider as a custom form control', () => {
     let fixture: ComponentFixture<RangeSliderWithFormControl>;
     let slider: MatSlider;
     let startInput: MatSliderThumb;
@@ -1487,7 +1487,7 @@ describe('MatSlider', () => {
       expect(sliderControl.touched).toBe(true);
     }));
 
-    it('should have the correct start input control state initially and after interaction', fakeAsync(() => {
+    it('should have the correct end input control state initially and after interaction', fakeAsync(() => {
       let sliderControl = fixture.componentInstance.endInputControl;
 
       // The control should start off valid, pristine, and untouched.
@@ -1928,7 +1928,7 @@ class RangeSliderWithOneWayBinding {
   imports: [MatSliderModule, FormsModule],
 })
 class SliderWithNgModel {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   val: number | undefined = 0;
 }
 
@@ -1943,7 +1943,7 @@ class SliderWithNgModel {
   imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModel {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   startVal: number | undefined = 0;
   endVal: number | undefined = 100;
 }
@@ -1960,7 +1960,7 @@ class RangeSliderWithNgModel {
   imports: [MatSliderModule, FormsModule],
 })
 class RangeSliderWithNgModelEdgeCase {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
   startValue: number = -0.7;
   endValue: number = -0.3;
 }
@@ -2015,8 +2015,8 @@ class SliderWithTwoWayBinding {
   imports: [MatSliderModule],
 })
 class RangeSliderWithTwoWayBinding {
-  @ViewChild(MatSlider) slider: MatSlider;
-  @ViewChildren(MatSliderThumb) sliderInputs: QueryList<MatSliderThumb>;
+  @ViewChild(MatSlider) slider!: MatSlider;
+  @ViewChildren(MatSliderThumb) sliderInputs!: QueryList<MatSliderThumb>;
   startValue = 0;
   endValue = 100;
 }
@@ -2031,7 +2031,7 @@ class RangeSliderWithTwoWayBinding {
   imports: [MatSliderModule],
 })
 class SliderWithTickMarks {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
 }
 
 @Component({
@@ -2045,7 +2045,7 @@ class SliderWithTickMarks {
   imports: [MatSliderModule],
 })
 class RangeSliderWithTickMarks {
-  @ViewChild(MatSlider) slider: MatSlider;
+  @ViewChild(MatSlider) slider!: MatSlider;
 }
 
 @Component({

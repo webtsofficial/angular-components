@@ -50,6 +50,12 @@ export interface MatTabGroupBaseHeader {
 /** Possible positions for the tab header. */
 export type MatTabHeaderPosition = 'above' | 'below';
 
+/** Possible values for the animation duration of a tab group. */
+export type MatTabGroupAnimationDuration =
+  | string
+  | number
+  | {body: string | number; header: string | number};
+
 /** Boolean constant that determines whether the tab group supports the `backgroundColor` input */
 const ENABLE_BACKGROUND_INPUT = true;
 
@@ -65,7 +71,7 @@ const ENABLE_BACKGROUND_INPUT = true;
   styleUrl: 'tab-group.css',
   encapsulation: ViewEncapsulation.None,
   // tslint:disable-next-line:validate-decorators
-  changeDetection: ChangeDetectionStrategy.Default,
+  changeDetection: ChangeDetectionStrategy.Eager,
   providers: [
     {
       provide: MAT_TAB_GROUP,
@@ -79,7 +85,8 @@ const ENABLE_BACKGROUND_INPUT = true;
     '[class.mat-mdc-tab-group-inverted-header]': 'headerPosition === "below"',
     '[class.mat-mdc-tab-group-stretch-tabs]': 'stretchTabs',
     '[attr.mat-align-tabs]': 'alignTabs',
-    '[style.--mat-tab-animation-duration]': 'animationDuration',
+    '[style.--mat-tab-body-animation-duration]': '_bodyAnimationDuration',
+    '[style.--mat-tab-header-animation-duration]': '_headerAnimationDuration',
   },
   imports: [
     MatTabHeader,
@@ -100,15 +107,17 @@ export class MatTabGroup
   private _tabLabelSubscription = Subscription.EMPTY;
   private _tabBodySubscription = Subscription.EMPTY;
   private _diAnimationsDisabled = _animationsDisabled();
+  protected _bodyAnimationDuration!: string;
+  protected _headerAnimationDuration!: string;
 
   /**
    * All tabs inside the tab group. This includes tabs that belong to groups that are nested
    * inside the current one. We filter out only the tabs that belong to this group in `_tabs`.
    */
-  @ContentChildren(MatTab, {descendants: true}) _allTabs: QueryList<MatTab>;
+  @ContentChildren(MatTab, {descendants: true}) _allTabs!: QueryList<MatTab>;
   @ViewChildren(MatTabBody) _tabBodies: QueryList<MatTabBody> | undefined;
-  @ViewChild('tabBodyWrapper') _tabBodyWrapper: ElementRef;
-  @ViewChild('tabHeader') _tabHeader: MatTabHeader;
+  @ViewChild('tabBodyWrapper') _tabBodyWrapper!: ElementRef;
+  @ViewChild('tabHeader') _tabHeader!: MatTabHeader;
 
   /** All of the tabs that belong to the group. */
   _tabs: QueryList<MatTab> = new QueryList<MatTab>();
@@ -170,14 +179,20 @@ export class MatTabGroup
 
   /** Duration for the tab animation. Will be normalized to milliseconds if no units are set. */
   @Input()
-  get animationDuration(): string {
+  get animationDuration(): MatTabGroupAnimationDuration {
     return this._animationDuration;
   }
-  set animationDuration(value: string | number) {
-    const stringValue = value + '';
-    this._animationDuration = /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
+  set animationDuration(value: MatTabGroupAnimationDuration) {
+    this._animationDuration = value;
+
+    if (value && typeof value === 'object') {
+      this._bodyAnimationDuration = normalizeDuration(value.body);
+      this._headerAnimationDuration = normalizeDuration(value.header);
+    } else {
+      this._headerAnimationDuration = this._bodyAnimationDuration = normalizeDuration(value);
+    }
   }
-  private _animationDuration: string;
+  private _animationDuration!: MatTabGroupAnimationDuration;
 
   /**
    * `tabindex` to be set on the inner element that wraps the tab content. Can be used for improved
@@ -194,7 +209,7 @@ export class MatTabGroup
     this._contentTabIndex = isNaN(value) ? null : value;
   }
 
-  private _contentTabIndex: number | null;
+  private _contentTabIndex: number | null = null;
 
   /**
    * Whether pagination should be disabled. This can be used to avoid unnecessary
@@ -246,13 +261,13 @@ export class MatTabGroup
     this._backgroundColor = value;
   }
 
-  private _backgroundColor: ThemePalette;
+  private _backgroundColor!: ThemePalette;
 
   /** Aria label of the inner `tablist` of the group. */
-  @Input('aria-label') ariaLabel: string;
+  @Input('aria-label') ariaLabel!: string;
 
   /** Sets the `aria-labelledby` of the inner `tablist` of the group. */
-  @Input('aria-labelledby') ariaLabelledby: string;
+  @Input('aria-labelledby') ariaLabelledby!: string;
 
   /** Output to enable support for two-way binding on `[(selectedIndex)]` */
   @Output() readonly selectedIndexChange: EventEmitter<number> = new EventEmitter<number>();
@@ -577,11 +592,11 @@ export class MatTabGroup
     }
   }
 
-  protected _animationsDisabled(): boolean {
+  protected _bodyAnimationsDisabled(): boolean {
     return (
       this._diAnimationsDisabled ||
-      this.animationDuration === '0' ||
-      this.animationDuration === '0ms'
+      this._bodyAnimationDuration === '0' ||
+      this._bodyAnimationDuration === '0ms'
     );
   }
 }
@@ -589,7 +604,13 @@ export class MatTabGroup
 /** A simple change event emitted on focus or selection changes. */
 export class MatTabChangeEvent {
   /** Index of the currently-selected tab. */
-  index: number;
+  index!: number;
   /** Reference to the currently-selected tab. */
-  tab: MatTab;
+  tab!: MatTab;
+}
+
+/** Normalizes an animation duration value. */
+function normalizeDuration(value: string | number): string {
+  const stringValue = value + '';
+  return /^\d+$/.test(stringValue) ? value + 'ms' : stringValue;
 }
